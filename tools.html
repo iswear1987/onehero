@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        #showAll{
+            background:url("assets/sprites/tiles2.png") no-repeat 0 0;
+            width: 840px;
+            padding:0;
+        }
+        #showAll li{
+            padding:0;
+            margin:0;
+            display:inline-block;
+            width:68px;
+            height: 68px;
+            border:1px dashed #AAA;
+
+        }
+        #showAll li input{
+            text-align:center;
+        }
+        label{
+            display:block;
+            width:100%;
+            height:68px;
+        }
+        #result{
+            width: 840px;
+        }
+    </style>
+</head>
+<body>
+    <textarea id="result"></textarea>
+    <ul id="showAll">
+
+    </ul>
+
+<script>
+    var baseNum = 40;
+    var $result,
+            dataSet = [];
+    $().ready(function(){
+        var $ul = $('#showAll');
+        $result = $('#result');
+        for(var i = baseNum; i < baseNum + 17 * 12; i++){
+            $ul.append($('<li title="' + i + '"><label><input type="checkbox" onclick="chkchange(this, ' + i + ')" /></label></li>'))
+        }
+    });
+
+    function chkchange(el, inx){
+        var $chk = $(el);
+        var inxInSet = -1;
+        if(el.checked){
+            if((inxInSet = dataSet.indexOf(inx)) == -1){
+                dataSet.push(inx);
+            }
+        }else{
+            if((inxInSet = dataSet.indexOf(inx)) !== -1){
+                dataSet.splice(inxInSet, 1);
+            }
+        }
+        dataSet.sort(function(a, b){
+            if(Number(a) > Number(b)){
+                return 1;
+            }else{
+                return -1;
+            }
+        });
+        $result.val(dataSet.join(', '));
+    }
+</script>
+</body>
+</html>
