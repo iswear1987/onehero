@@ -64,9 +64,9 @@ var MainMenu = (function () {
         var bar = this.game.add.graphics();
         bar.beginFill(0x000000, 0.2);
         bar.drawRect(0, 100, 800, 100);
-        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+         var style = { font: "bold 32px Simhei", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
         //  The Text is positioned at 0, 100
-        var gameTitle = this.game.add.text(0, 0, "phaser 2.4 text bounds", style);
+        var gameTitle: Phaser.Text = this.game.add.text(0, 0, "我的故事（精简版）", style);
         gameTitle.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         //  We'll set the bounds to be from x0, y100 and be 800px wide by 100px high
         gameTitle.setTextBounds(0, 100, 800, 100);
