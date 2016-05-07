@@ -21,7 +21,6 @@ class Subtitle{
 
     }
     create(){
-        this.content = ['ok'];
         this.text = this.game.add.text(32, 32, '', { font: "30px Simhei", fill: "#FFFFFF" });
         this.showText();
     }
