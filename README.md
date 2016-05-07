@@ -8,4 +8,4 @@
  * html5和javascript
  * Au的音频剪辑与合成、photoshop抠图与图像处理
 ---
-![gif](http://git.oschina.net/iswear/onehero/tree/master/etc/example.gif)
+![gif](http://git.oschina.net/iswear/onehero/raw/master/etc/example.gif)
