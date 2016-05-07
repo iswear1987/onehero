@@ -12,7 +12,8 @@ var Subtitle = (function () {
             '',
             '出...',
             '山...',
-            '了...'];
+            '了...'
+        ];
         this.lineIndex = 0;
         this.wordIndex = 0;
         this.game = game;

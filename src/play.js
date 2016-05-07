@@ -11,9 +11,23 @@ var Play = (function () {
         this.jumpTimer = 0;
         this.facing = 'fall';
         this.worldSize = { width: 2800, height: 560 };
-        this.playState = { pos: 'none', direction: 1, isReady: false, scale: { x: 1, y: 1 }, mileStone: { now: false, last: false }, lastMileInx: -1 };
-        this.skill = { allIds: [], gotIds: [], skillGroup: null, skillSprites: [], map: [[2], [3, 4, 5]] };
-        this.uiBox = { "style": { "font": "bold 24px Simhei", fill: "#fff", boundsAlignH: "left", boundsAlignV: "top" }, uiBgTweens: [] };
+        this.playState = { pos: 'none', direction: 1, isReady: false, scale: { x: 1, y: 1 }, mileStone: { now: false, last: false, lastMileInx: -1 }, lastMileInx: -1 };
+        this.skill = { allIds: [], gotIds: [], skillGroup: null, skillSprites: [], skillIcoGroup: null };
+        this.uiBox = { uiBg: null, uiBgTweens: [], uiText: null, uiTextTween: null, "style": { "font": "bold 24px Simhei", fill: "#fff", boundsAlignH: "left", boundsAlignV: "top" } };
+        this.gamesound = { getSkill: [], success: null, failure: null };
+        this.toEnd = function (player, tipBox) {
+            this.playState.mileStone.now = true;
+            if (!this.playState.mileStone.last) {
+                if (this.skill.gotIds.length === 16) {
+                    this.gamesound.success.play();
+                    this.showTips('集齐了所有技能\n可以走上人生巅峰了！\n-End-');
+                }
+                else {
+                    this.gamesound.failure.play();
+                    this.showTips('还没有集齐所有技能哦...\n' + this.skill.gotIds.length + '/16');
+                }
+            }
+        };
         this.toMileStone = function (player, tipBox, year) {
             this.playState.lastMileInx = Number(year.match(/\d+/)[0]) - 2009;
             this.playState.mileStone.now = true;
@@ -21,35 +35,44 @@ var Play = (function () {
             if (!this.playState.mileStone.last) {
                 this.showTips(this.info.milestone[year]);
             }
-            /*
-            if(!this.playState.mileStone.now){
-                console.log('into 2009');
-                this.playState.mileStone.now = true;
-            }
-            */
-            //tipBox.kill();
         };
         this.leaveMileStone = function () {
             this.hideTips();
             if (this.playState.lastMileInx !== -1) {
-                var ids = this.skill.map[this.playState.lastMileInx];
+                var ids = this.info.skillMap[this.playState.lastMileInx];
                 for (var i = 0; i < ids.length; i++) {
                     if (this.skill.allIds.indexOf(ids[i]) === -1) {
                         this.skill.allIds.push(ids[i]);
-                        var skillSprite = this.genSkill(ids[i], this.player.x + 100 + 100 * i);
-                        skillSprite.sid = ids[i];
+                        var self = this;
+                        (function (inx) {
+                            self.game.time.events.add(150 * inx, function () {
+                                var skillSprite = self.genSkill(ids[inx], self.player.x + 30 + 50 * inx);
+                                skillSprite.sid = ids[inx];
+                            });
+                        })(i);
                     }
                 }
             }
             this.playState.lastMileInx = -1;
         };
+        //生成技能图标
         this.genSkill = function (id, x, y) {
-            var ps = this.skill.skillGroup.create(x, this.player.y - 200, 'skill', id);
-            this.game.physics.arcade.enable(ps);
-            ps.anchor.setTo(0.5, 0.5);
-            ps.body.bounce.y = 0.3;
-            ps.body.gravity.y = 200;
-            return ps;
+            if (typeof y === 'undefined' || y === null) {
+                y = this.player.y - 200;
+            }
+            var skillSprite = this.skill.skillGroup.create(x, y, 'skill', id);
+            skillSprite.anchor.setTo(0.5, 0.5);
+            skillSprite.width = 40;
+            skillSprite.height = 40;
+            skillSprite.scale.setTo(0, 0);
+            var tween = this.game.add.tween(skillSprite.scale).to({ x: 1, y: 1 }, 300, Phaser.Easing.Linear.None, true, 0);
+            tween.onComplete.add(function () {
+                skillSprite.body.gravity.y = this.game.rnd.between(0, 3) * 100 + 200;
+            }, this);
+            this.game.physics.arcade.enable(skillSprite);
+            skillSprite.body.bounce.y = 0.3;
+            skillSprite['sid'] = id;
+            return skillSprite;
         };
         this.showTips = function (tips) {
             //绘制背景
@@ -74,11 +97,14 @@ var Play = (function () {
             this.uiBox.uiText.text = '';
             //this.uiBox.uiText.kill();
         };
+        //拾取技能
         this.getSkill = function (player, skillSprite) {
-            //var skillIco: Phaser.Sprite = this.game.add.sprite(this.player.position.x - this.game.camera.position.x, this.player.y - 100, 'skill', skillSprite.sid);
-            var skillIco = this.game.add.sprite(skillSprite.x - this.game.camera.position.x + 20, skillSprite.y - this.game.camera.position.y + 20, 'skill', skillSprite.sid);
-            skillIco.fixedToCamera = true;
+            var snd = this.gamesound.getSkill[this.game.rnd.between(0, 4)];
+            snd.play();
+            var skillIco = this.game.add.sprite(skillSprite.x - this.game.camera.position.x, skillSprite.y - this.game.camera.position.y, 'skill', skillSprite['sid']);
             skillIco.anchor.setTo(0.5, 0.5);
+            skillIco.fixedToCamera = true;
+            this.skill.skillIcoGroup.add(skillIco);
             var LINE = 8;
             var x, y;
             x = this.skill.gotIds.length % LINE;
@@ -96,7 +122,6 @@ var Play = (function () {
     Play.prototype.preload = function () {
         this.game.load.image('clouds', 'assets/sprites/clouds.jpg');
         this.game.load.spritesheet('mario', 'assets/sprites/mariospritesheet-small.png', 50, 50);
-        this.game.load.spritesheet('coin', 'assets/sprites/coin.png', 32, 32);
         this.game.load.tilemap('map', 'assets/map.json?_t=' + Date.now(), null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image('tile', 'assets/sprites/tiles2.png');
         this.game.load.spritesheet('skill', 'assets/sprites/skill.png', 40, 40);
@@ -108,6 +133,16 @@ var Play = (function () {
     Play.prototype.create = function () {
         //加载游戏配置文件
         this.info = this.game.cache.getJSON('info');
+        for (var i = 1; i <= 5; i++) {
+            var snd = this.game.add.audio('bee_' + i);
+            snd.allowMultiple = true;
+            snd.autoplay = false;
+            this.gamesound.getSkill.push(snd);
+        }
+        this.gamesound.failure = this.game.add.audio('failure');
+        this.gamesound.failure.autoplay = false;
+        this.gamesound.success = this.game.add.audio('success');
+        this.gamesound.success.autoplay = false;
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         //this.game.physics.arcade.gravity.y = 350;  //realistic gravity
         this.map = this.game.add.tilemap('map');
@@ -123,6 +158,7 @@ var Play = (function () {
         this.layer1.resizeWorld();
         this.layer2.resizeWorld();
         this.player = this.game.add.sprite(70 * 2 + 20, this.game.world.height - 300, 'mario', 6);
+        this.player.name = 'player';
         this.layer3 = this.map.createLayer('Tile Layer 3');
         this.layer3.resizeWorld();
         //设置角色
@@ -142,16 +178,54 @@ var Play = (function () {
         this.skill.skillGroup = this.game.add.group();
         this.skill.skillGroup.enableBody = true;
         //载入技能图集
-        this.map.createFromObjects('Object Layer 2', 300, 'skill', 0, true, false, this.skill.skillGroup);
-        //this.infos.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
-        //this.infos.callAll('animations.play', 'animations', 'spin');
-        //this.map.setTileIndexCallback(196, this.toMileStone, this, 'Tile Layer 3');
+        //this.map.createFromObjects('Object Layer 2', 300, 'skill', 0, true, false, this.skill.skillGroup);
         this.map.setTileLocationCallback(2, 6, 1, 1, function (player, tipBox) {
-            this.toMileStone(player, tipBox, 'ms2009');
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2009');
+            }
         }, this);
         this.map.setTileLocationCallback(9, 6, 1, 1, function (player, tipBox) {
-            this.toMileStone(player, tipBox, 'ms2010');
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2010');
+            }
         }, this);
+        this.map.setTileLocationCallback(16, 6, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2011');
+            }
+        }, this);
+        this.map.setTileLocationCallback(23, 6, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2012');
+            }
+        }, this);
+        this.map.setTileLocationCallback(30, 5, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2013');
+            }
+        }, this);
+        this.map.setTileLocationCallback(37, 6, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2014');
+            }
+        }, this);
+        this.map.setTileLocationCallback(44, 5, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2015');
+            }
+        }, this);
+        this.map.setTileLocationCallback(50, 4, 1, 1, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toMileStone(player, tipBox, 'ms2016');
+            }
+        }, this);
+        this.map.setTileLocationCallback(53, 3, 2, 2, function (player, tipBox) {
+            if (player.name === 'player') {
+                this.toEnd(player, tipBox);
+            }
+        }, this);
+        //创建图标组
+        this.skill.skillIcoGroup = this.game.add.group();
         //初始化uiBox
         // create a new bitmap data object
         var bmd = this.game.add.bitmapData(800, 140);
@@ -160,12 +234,7 @@ var Play = (function () {
         bmd.ctx.rect(0, 0, 800, 140);
         bmd.ctx.fillStyle = 'rgba(0,0,0,0.2)';
         bmd.ctx.fill();
-        var skillTitle = this.game.add.text(20, 30, '技能：', this.uiBox.style);
-        skillTitle.fixedToCamera = true;
         this.uiBox.uiBg = this.game.add.sprite(0, 120, bmd);
-        //this.uiBox.uiBg = this.game.add.graphics();
-        //this.uiBox.uiBg.beginFill(0x000000, 0.2);
-        //this.uiBox.uiBg.drawRect(0, 100, 800, 110);
         this.uiBox.uiBg.alpha = 0;
         this.uiBox.uiBg.scale.y = 0;
         this.uiBox.uiBg.anchor.y = 0.25;
@@ -175,13 +244,13 @@ var Play = (function () {
         this.uiBox.uiText.setTextBounds(20, 110, 800, 100);
         this.uiBox.uiText.alpha = 0;
         this.uiBox.uiText.fixedToCamera = true;
-        var ps = this.skill.skillGroup.create(this.player.x, this.player.y - 150, 'skill', 1);
-        ps.anchor.setTo(0.5, 0.5);
-        ps['sid'] = 1;
-        this.game.physics.arcade.enable(ps);
-        ps.anchor.setTo(0.5, 0.5);
-        ps.body.bounce.y = 0.3;
-        ps.body.gravity.y = 450;
+        //初始生成技能
+        var skillTitle = this.game.add.text(20, 30, '技能：', this.uiBox.style);
+        skillTitle.fixedToCamera = true;
+        this.genSkill(0, this.player.x - 20, 120);
+        this.game.time.events.add(500, function () {
+            this.genSkill(1, this.player.x, 300);
+        }, this);
     };
     Play.prototype.update = function () {
         //检测提示方块
@@ -216,13 +285,13 @@ var Play = (function () {
             }
             else if (leftKey.isDown) {
                 this.playState.direction = -1 * this.playState.scale.x;
-                this.player.body.velocity.x = -500;
+                this.player.body.velocity.x = -300;
                 this.player.animations.play('walk');
                 isNoKeyPressed = false;
             }
             else if (rightKey.isDown) {
                 this.playState.direction = this.playState.scale.x;
-                this.player.body.velocity.x = 500;
+                this.player.body.velocity.x = 300;
                 this.player.animations.play('walk');
                 isNoKeyPressed = false;
             }
@@ -238,7 +307,6 @@ var Play = (function () {
             this.player.body.velocity.y = -300;
             this.jumpTimer = this.game.time.now + 750;
         }
-        //this.playState.toMileStone = false;
         //离开里程碑
         if (!this.playState.mileStone.now && this.playState.mileStone.last) {
             this.leaveMileStone();

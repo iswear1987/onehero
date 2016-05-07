@@ -20,7 +20,7 @@ class SimpleGame{
         this.game.state.add('play', new Play(this.game));
     }
     create() {
-        this.game.state.start('play');
+        this.game.state.start('logo');
     }
 }
 window.onload = () => {

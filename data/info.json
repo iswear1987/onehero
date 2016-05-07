@@ -1,7 +1,15 @@
 {
   "status": 0,
   "milestone":{
-    "ms2009": "自带天赋，电子商务，收起行囊，去了帝都\n技能：JAVA,Photoshop,计算机网络和硬件，还有...情怀\n[WSAD移动角色，空格跳跃]",
-    "ms2010": "继续学习\n技能：JAVA企业应用，CSS、html、javascript、初步接触linux"
-  }
+    "ms2009": "2009 在北京\nJAVA,PS,网络和初级运维，CSS、html、js，还有...情怀\n                                        [ASD移动角色，空格跳跃]",
+    "ms2010": "2010 继续学习\nJAVA企业应用，进一步熟悉CSS、html、js、初步接触linux",
+    "ms2011": "2011 回到西安\n熟悉jQuery、熟悉JAVA SSH框架",
+    "ms2012": "2012 扛起前端\n编写jQuery 插件、深入CSS、html、js、正则表达式、初步接触linux",
+    "ms2013": "2013 感谢没有世界末日\n技能：springMVC+freemark静态化、熟悉nodeJS、\n熟悉bootstrap",
+    "ms2014": "2014 打通任督二脉\n技能：sematic ui、全栈技术、网络安全、unity3D\negret游戏引擎、Go语言、docker",
+    "ms2015": "2015 有爱好不孤单\n技能：熟悉EmberJS、AngularJS、C#\n树莓派、Anduino、以及各种传感器",
+    "ms2016": "2016 新的开始\n深入C#、ecmascript、第三方SDK、深入nodeJS\nJIRA、团队管理、Jenkins\n",
+    "end": "End"
+  },
+  "skillMap": [[2], [3, 4], [14], [6], [10, 15], [9, 5, 12], [11, 13, 8, 7], [14], []]
 }

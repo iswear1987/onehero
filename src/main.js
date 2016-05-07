@@ -17,7 +17,7 @@ var SimpleGame = (function () {
         this.game.state.add('play', new Play(this.game));
     };
     SimpleGame.prototype.create = function () {
-        this.game.state.start('play');
+        this.game.state.start('logo');
     };
     return SimpleGame;
 })();

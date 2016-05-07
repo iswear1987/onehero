@@ -17,12 +17,33 @@ class MainMenu{
         this.game.load.spritesheet("btn_start", "../assets/sprites/button-start.png", 401, 143);
         this.game.load.spritesheet('itm_snowman', '../assets/sprites/snowman.png', 103, 78);
         this.game.load.image('bg', '../assets/sprites/deepblue.png');
+
         this.game.load.image('bz-0', '../assets/sprites/bz-0.png');
         this.game.load.image('bz-1', '../assets/sprites/bz-1.png');
 
     }
     create(){
+        //处理声音
         this.game.add.image(0, 0, 'bg');
+        var bgm = this.game.add.audio('bgm');
+        bgm.allowMultiple = false;
+        bgm.loop = true;
+        bgm.play();
+
+        var sound: Phaser.Sound = this.game.add.audio('sound');
+        sound.addMarker('sound_1', 0, 1.3);
+        sound.addMarker('sound_2', 2, 3.3);
+        sound.addMarker('sound_3', 4, 5.3);
+        sound.addMarker('sound_4', 6, 6.3);
+        sound.addMarker('sound_5', 8, 8.3);
+        sound.addMarker('success', 10, 12.3);
+        sound.addMarker('failure', 13, 13.5);
+
+        sound.allowMultiple = true;
+        sound.autoplay = false;
+
+
+        this.game['mssound'] = sound;
 
         //var btn_start: Phaser.Sprite = this.game.add.sprite(this.game.width / 2, this.game.height/ 2, 'btn_start');
         var btn_start: Phaser.Button = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 60, 'btn_start', this.actionOnClick, this, 0, 1, 2);
