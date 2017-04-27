@@ -2,11 +2,11 @@
  * Created by iswear on 04/27.
  */
 /// <reference path="../lib/phaser.d.ts" />
-var Logo = (function () {
-    function Logo(game) {
+class Logo {
+    constructor(game) {
         this.game = game;
     }
-    Logo.prototype.preload = function () {
+    preload() {
         this.game.load.image('logo', '/assets/logo.jpg');
         this.game.load.audio('bgm', '/assets/Time_travel.mp3');
         //this.game.load.audio('sound', 'assets/sound.ogg');
@@ -17,8 +17,8 @@ var Logo = (function () {
         this.game.load.audio('bee_5', 'assets/bee_5.mp3');
         this.game.load.audio('success', 'assets/success.mp3');
         this.game.load.audio('failure', 'assets/failure.mp3');
-    };
-    Logo.prototype.create = function () {
+    }
+    create() {
         var logo = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'logo');
         logo.anchor.setTo(0.5, 0.5);
         logo.scale.setTo(0.8, 0.8);
@@ -26,11 +26,10 @@ var Logo = (function () {
         this.game.add.tween(logo.scale).to({ x: 1, y: 1 }, 300, Phaser.Easing.Cubic.Out, true);
         this.game.add.tween(logo).to({ alpha: 1 }, 300, Phaser.Easing.Linear.None, true);
         this.game.time.events.add(Phaser.Timer.SECOND * 1, this.hideLogo, this);
-    };
-    Logo.prototype.hideLogo = function () {
+    }
+    hideLogo() {
         this.game.state.clearCurrentState();
         this.game.state.start('mainmenu');
-    };
-    return Logo;
-})();
+    }
+}
 //# sourceMappingURL=logo.js.map

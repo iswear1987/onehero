@@ -6,22 +6,21 @@
 /// <reference path="mainmenu.ts" />
 /// <reference path="subtitle.ts" />
 /// <reference path="play.ts" />
-var SimpleGame = (function () {
-    function SimpleGame() {
+class SimpleGame {
+    constructor() {
         this.game = new Phaser.Game(800, 480, Phaser.AUTO, 'content', { preload: this.preload, create: this.create });
     }
-    SimpleGame.prototype.preload = function () {
+    preload() {
         this.game.state.add('logo', new Logo(this.game));
         this.game.state.add('mainmenu', new MainMenu(this.game));
         this.game.state.add('subtitle', new Subtitle(this.game));
         this.game.state.add('play', new Play(this.game));
-    };
-    SimpleGame.prototype.create = function () {
+    }
+    create() {
         this.game.state.start('logo');
-    };
-    return SimpleGame;
-})();
-window.onload = function () {
+    }
+}
+window.onload = () => {
     var game = new SimpleGame();
 };
 //# sourceMappingURL=main.js.map

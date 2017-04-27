@@ -6,8 +6,8 @@
 /// <reference path="../lib/p2.d.ts" />
 /// <reference path="../lib/phaser.comments.d.ts" />
 /// <reference path="../lib/pixi.comments.d.ts" />
-var Play = (function () {
-    function Play(game) {
+class Play {
+    constructor(game) {
         this.jumpTimer = 0;
         this.facing = 'fall';
         this.worldSize = { width: 2800, height: 560 };
@@ -119,20 +119,21 @@ var Play = (function () {
         };
         this.game = game;
     }
-    Play.prototype.preload = function () {
+    preload() {
         this.game.load.image('clouds', 'assets/sprites/clouds.jpg');
         this.game.load.spritesheet('mario', 'assets/sprites/mariospritesheet-small.png', 50, 50);
         this.game.load.tilemap('map', 'assets/map.json?_t=' + Date.now(), null, Phaser.Tilemap.TILED_JSON);
         this.game.load.image('tile', 'assets/sprites/tiles2.png');
         this.game.load.spritesheet('skill', 'assets/sprites/skill.png', 40, 40);
         this.game.load.json('info', 'data/info.json?_t=' + Date.now());
-    };
-    Play.prototype.render = function () {
+    }
+    render() {
         //this.game.debug.text('x:' + this.player.x + ' y:' + this.player.y + 'cameraOffset  x:' + this.game.camera.position.x + ', y: ' + this.game.camera.position.y, 20, 20);
-    };
-    Play.prototype.create = function () {
+    }
+    create() {
         //加载游戏配置文件
         this.info = this.game.cache.getJSON('info');
+        //加载音效文件
         for (var i = 1; i <= 5; i++) {
             var snd = this.game.add.audio('bee_' + i);
             snd.allowMultiple = true;
@@ -251,8 +252,8 @@ var Play = (function () {
         this.game.time.events.add(500, function () {
             this.genSkill(1, this.player.x, 300);
         }, this);
-    };
-    Play.prototype.update = function () {
+    }
+    update() {
         //检测提示方块
         //this.game.physics.arcade.overlap(this.player, this.infos, this.toMileStone, null, this);
         //初始化标记
@@ -312,7 +313,6 @@ var Play = (function () {
             this.leaveMileStone();
             this.playState.mileStone.now = false;
         }
-    };
-    return Play;
-})();
+    }
+}
 //# sourceMappingURL=play.js.map

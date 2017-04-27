@@ -3,8 +3,8 @@
  */
 /// <reference path="../lib/phaser.d.ts" />
 /// <reference path="../lib/pixi.d.ts" />
-var Subtitle = (function () {
-    function Subtitle(game) {
+class Subtitle {
+    constructor(game) {
         this.content = [
             '你好,这是一封简历',
             '',
@@ -18,17 +18,17 @@ var Subtitle = (function () {
         this.wordIndex = 0;
         this.game = game;
     }
-    Subtitle.prototype.preload = function () {
-    };
-    Subtitle.prototype.create = function () {
+    preload() {
+    }
+    create() {
         this.text = this.game.add.text(32, 32, '', { font: "30px Simhei", fill: "#FFFFFF" });
         this.showText();
-    };
-    Subtitle.prototype.showText = function () {
+    }
+    showText() {
         this.text.setShadow(3, 3, 'rgba(255,255,255,0.5)', 2);
         this.nextLine();
-    };
-    Subtitle.prototype.nextLine = function () {
+    }
+    nextLine() {
         var self = this;
         if (this.lineIndex === this.content.length) {
             //all Finished
@@ -45,8 +45,8 @@ var Subtitle = (function () {
         this.wordIndex = 0;
         this.game.time.events.repeat(120, this.line.length, this.nextWord, this);
         this.lineIndex += 1;
-    };
-    Subtitle.prototype.nextWord = function (text) {
+    }
+    nextWord(text) {
         if (this.line.length !== 0) {
             this.text.text = this.text.text.concat(this.line[this.wordIndex]);
             this.wordIndex += 1;
@@ -55,8 +55,8 @@ var Subtitle = (function () {
             this.game.time.events.add(400, this.nextLine, this);
             this.text.text = this.text.text.concat('\n');
         }
-    };
-    Subtitle.prototype.showOther = function (showFinish) {
+    }
+    showOther(showFinish) {
         var bz_0 = this.game.add.sprite(this.game.world.width, this.game.world.height, 'bz-0');
         var bz_1 = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'bz-1');
         bz_0.anchor.setTo(1, 0);
@@ -69,7 +69,6 @@ var Subtitle = (function () {
         //var otherTween2: Phaser.Tween = this.game.add.tween(bz_1).to({scale:{x: 1, y: 1}, alpha: 1}, 600, Phaser.Easing.Bounce.In, true);
         var otherTween2 = this.game.add.tween(bz_1).to({ alpha: 1 }, 600, Phaser.Easing.Linear.None, true);
         this.game.add.tween(bz_1.scale).to({ x: 1, y: 1 }, 600, Phaser.Easing.Bounce.Out, true);
-    };
-    return Subtitle;
-})();
+    }
+}
 //# sourceMappingURL=subtitle.js.map
