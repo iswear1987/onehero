@@ -10,7 +10,7 @@ class Logo{
         this.game = game;
     }
     preload() {
-        this.game.load.image('logo', '../assets/logo.jpg');
+        this.game.load.image('logo', './assets/logo.jpg');
         this.game.load.audio('bgm', '../assets/Time_travel.mp3')
         //this.game.load.audio('sound', '../assets/sound.ogg');
 

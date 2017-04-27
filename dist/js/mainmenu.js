@@ -9,11 +9,11 @@ class MainMenu {
         this.game = game;
     }
     preload() {
-        this.game.load.spritesheet("btn_start", "../assets/sprites/button-start.png", 401, 143);
-        this.game.load.spritesheet('itm_snowman', '../assets/sprites/snowman.png', 103, 78);
-        this.game.load.image('bg', '../assets/sprites/deepblue.png');
-        this.game.load.image('bz-0', '../assets/sprites/bz-0.png');
-        this.game.load.image('bz-1', '../assets/sprites/bz-1.png');
+        this.game.load.spritesheet("btn_start", "./assets/sprites/button-start.png", 401, 143);
+        this.game.load.spritesheet('itm_snowman', './assets/sprites/snowman.png', 103, 78);
+        this.game.load.image('bg', './assets/sprites/deepblue.png');
+        this.game.load.image('bz-0', './assets/sprites/bz-0.png');
+        this.game.load.image('bz-1', './assets/sprites/bz-1.png');
     }
     create() {
         //处理声音
