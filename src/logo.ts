@@ -10,17 +10,17 @@ class Logo{
         this.game = game;
     }
     preload() {
-        this.game.load.image('logo', 'assets/logo.jpg');
-        this.game.load.audio('bgm', 'assets/Time_travel.mp3')
-        //this.game.load.audio('sound', '../assets/sound.ogg');
+        this.game.load.image('logo', './dist/assets/logo.jpg');
+        this.game.load.audio('bgm', './dist/assets/Time_travel.mp3')
+        //this.game.load.audio('sound', '.././dist/assets/sound.ogg');
 
-        this.game.load.audio('bee_1', 'assets/bee_1.mp3');
-        this.game.load.audio('bee_2', 'assets/bee_2.mp3');
-        this.game.load.audio('bee_3', 'assets/bee_3.mp3');
-        this.game.load.audio('bee_4', 'assets/bee_4.mp3');
-        this.game.load.audio('bee_5', 'assets/bee_5.mp3');
-        this.game.load.audio('success', 'assets/success.mp3');
-        this.game.load.audio('failure', 'assets/failure.mp3');
+        this.game.load.audio('bee_1', './dist/assets/bee_1.mp3');
+        this.game.load.audio('bee_2', './dist/assets/bee_2.mp3');
+        this.game.load.audio('bee_3', './dist/assets/bee_3.mp3');
+        this.game.load.audio('bee_4', './dist/assets/bee_4.mp3');
+        this.game.load.audio('bee_5', './dist/assets/bee_5.mp3');
+        this.game.load.audio('success', './dist/assets/success.mp3');
+        this.game.load.audio('failure', './dist/assets/failure.mp3');
 
     }
     create() {
